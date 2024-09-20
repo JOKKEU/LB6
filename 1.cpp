@@ -21,13 +21,13 @@ int** create_weighted_adjacency_matrix(size_t size) {
 
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = i + 1; j < size; ++j) {
-            matrix[i][j] = rand() % 10 + 1; // ñëó÷àéíûé âåñ îò 1 äî 10
-            matrix[j][i] = matrix[i][j]; // ñèììåòðè÷íîñòü
+            matrix[i][j] = rand() % 10 + 1; // Ã±Ã«Ã³Ã·Ã Ã©Ã­Ã»Ã© Ã¢Ã¥Ã± Ã®Ã² 1 Ã¤Ã® 10
+            matrix[j][i] = matrix[i][j]; // Ã±Ã¨Ã¬Ã¬Ã¥Ã²Ã°Ã¨Ã·Ã­Ã®Ã±Ã²Ã¼
         }
     }
 
     for (size_t i = 0; i < size; ++i) {
-        matrix[i][i] = 0; // íåò ïåòåëü
+        matrix[i][i] = 0; // Ã­Ã¥Ã² Ã¯Ã¥Ã²Ã¥Ã«Ã¼
     }
 
     return matrix;
