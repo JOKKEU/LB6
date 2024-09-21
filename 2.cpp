@@ -12,7 +12,7 @@ int** create_weighted_adjacency_matrix(size_t size)
 
     for (size_t i = 0; i < size; ++i)
     {
-        matrix[i] = (int*)malloc(size * sizeof(int));                                   
+        matrix[i] = (int*)malloc(size * sizeof(int));
         if (!matrix[i])
         {
             for (size_t j = 0; j < i; ++j)
@@ -102,16 +102,20 @@ int** contraction_of_a_graph_edge(int** matrix, size_t size)
     return matrix;
 }
 
-int** identification_of_vertices(int** matrix, size_t size) {
+int** identification_of_vertices(int** matrix, size_t size) 
+{
     int** new_matrix = (int**)malloc((size - 1) * sizeof(int*));
-    if (!new_matrix) {
+    if (!new_matrix) 
+    {
         return nullptr;
     }
 
-    for (size_t i = 0; i < size - 1; ++i) {
+    for (size_t i = 0; i < size - 1; ++i) 
+    {
         new_matrix[i] = (int*)malloc((size - 1) * sizeof(int));
         if (!new_matrix[i]) {
-            for (size_t j = 0; j < i; ++j) {
+            for (size_t j = 0; j < i; ++j) 
+            {
                 free(new_matrix[j]);
             }
             free(new_matrix);
@@ -123,22 +127,29 @@ int** identification_of_vertices(int** matrix, size_t size) {
     select_random_verticles(size, &v1, &v2);
 
     size_t new_i = 0;
-    for (size_t i = 0; i < size; ++i) {
-        if (i == v2) {
+    for (size_t i = 0; i < size; ++i) 
+    {
+        if (i == v2) 
+        {
             continue;
         }
         size_t new_j = 0;
-        for (size_t j = 0; j < size; ++j) {
-            if (j == v2) {
+        for (size_t j = 0; j < size; ++j) 
+        {
+            if (j == v2) 
+            {
                 continue;
             }
-            if (i == v1 || j == v1) {
+            if (i == v1 || j == v1) 
+            {
                 new_matrix[new_i][new_j] = matrix[v1][j] + matrix[v2][j == v1 ? v2 : j];
-                if (i == v1 && j == v1) {
+                if (i == v1 && j == v1) 
+                {
                     new_matrix[new_i][new_j] = 0;
                 }
             }
-            else {
+            else 
+            {
                 new_matrix[new_i][new_j] = matrix[i][j];
             }
 
@@ -156,14 +167,16 @@ int** graph_vertex_splits(int** matrix, size_t size)
     size_t new_size = 2 * size;
 
     int** new_matrix = (int**)malloc(new_size * sizeof(int*));
-    if (!new_matrix) {
+    if (!new_matrix) 
+    {
         return nullptr;
     }
 
-    for (size_t i = 0; i < size - 1; ++i) 
+    for (size_t i = 0; i < new_size; i++) 
     {
-        new_matrix[i] = (int*)malloc((size - 1) * sizeof(int));
-        if (!new_matrix[i]) {
+        new_matrix[i] = (int*)malloc(new_size * sizeof(int));
+        if (!new_matrix[i]) 
+        {
             for (size_t j = 0; j < i; ++j) 
             {
                 free(new_matrix[j]);
@@ -171,66 +184,72 @@ int** graph_vertex_splits(int** matrix, size_t size)
             free(new_matrix);
             return nullptr;
         }
-    }
-    
-    for (int i = 0; i < new_size; i++) 
-    {
-        new_matrix[i] = (int*)malloc(new_size * sizeof(int));
-        for (int j = 0; j < new_size; j++) 
+
+        for (size_t j = 0; j < new_size; j++) 
         {
-            new_matrix[i][j] = 0; 
+            new_matrix[i][j] = 0;
         }
     }
 
-    for (int i = 0; i < new_size; i++) 
+    for (size_t i = 0; i < size; i++) 
     {
-        for (int j = 0; j < new_size; j++) 
+        for (size_t j = 0; j < size; j++) 
         {
             if (matrix[i][j] != 0) 
             {
                 int weight = matrix[i][j] / 2;
-                new_matrix[i][j + new_size] = weight; 
-                new_matrix[j + new_size][i] = weight; 
+                new_matrix[i][j + size] = weight;
+                new_matrix[j + size][i] = weight;
             }
         }
-        new_matrix[i][i + new_size] = 1;
-        new_matrix[i + new_size][i] = 1;
+        new_matrix[i][i + size] = 1;
+        new_matrix[i + size][i] = 1;
     }
 
     return new_matrix;
 }
 
 
-void print_identification_of_vertices(int** matrix, size_t size)
+void print_identification_of_vertices(int** matrix, size_t size) 
 {
-    size_t new_size = size - 1;
-    matrix = identification_of_vertices(matrix, size);
+    int** new_matrix = identification_of_vertices(matrix, size);
+    if (!new_matrix) 
+    {
+        return;
+    }
+
     std::cout << "after identification_of_vertices\n";
-    print_matrix(matrix, new_size);
-    free_matrix(matrix, new_size);
+    print_matrix(new_matrix, size - 1);
+    free_matrix(new_matrix, size - 1);
     std::cout << "\n\n";
-    return;
 }
 
-void print_contraction_of_a_graph_edge(int** matrix, size_t size)
+void print_contraction_of_a_graph_edge(int** matrix, size_t size) 
 {
-    matrix = contraction_of_a_graph_edge(matrix, size);
+    int** new_matrix = contraction_of_a_graph_edge(matrix, size);
+    if (!new_matrix) 
+    {
+        return;
+    }
+
     std::cout << "after contraction_of_a_graph_edge\n";
-    print_matrix(matrix, size);
-    free_matrix(matrix, size);
+    print_matrix(new_matrix, size);
+    free_matrix(new_matrix, size);
     std::cout << "\n\n";
-    return;
 }
 
-void print_graph_vertex_splits(int** matrix, size_t size)
+void print_graph_vertex_splits(int** matrix, size_t size) 
 {
-    size_t new_size = size + 1;
-    matrix = graph_vertex_splits(matrix, size);
+    int** new_matrix = graph_vertex_splits(matrix, size);
+    if (!new_matrix) 
+    {
+        return;
+    }
+
     std::cout << "after graph_vertex_splits\n";
-    print_matrix(matrix, new_size);
-    free_matrix(matrix, new_size);
+    print_matrix(new_matrix, 2 * size);
+    free_matrix(new_matrix, 2 * size);
     std::cout << "\n\n";
-    return;
 }
 
 
@@ -293,13 +312,12 @@ void start()
             std::cout << "Wrong opetrarino\n";
         }
 
-        free_matrix(matrix, size);
     }
 }
 
-int main() 
+int main()
 {
     start();
-    
+
     return 0;
 }
